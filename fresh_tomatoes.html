@@ -1,10 +1,4 @@
-import webbrowser
-import os
-import re
 
-
-# Styles and scripting for the page
-main_page_head = '''
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -83,11 +77,7 @@ main_page_head = '''
         });
     </script>
 </head>
-'''
 
-
-# The main page layout and title bar
-main_page_content = '''
   <body>
     <!-- Trailer Video Modal -->
     <div class="modal" id="trailer">
@@ -113,56 +103,37 @@ main_page_content = '''
       </div>
     </div>
     <div class="container">
-      {movie_tiles}
+      
+<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="z-lmF5DAssU" data-toggle="modal" data-target="#trailer">
+    <img src="http://www.gstatic.com/tv/thumb/movieposters/34914/p34914_p_v8_ae.jpg" width="220" height="342">
+    <h2>Shaun of the Dead</h2>
+</div>
+
+<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="ayTnvVpj9t4" data-toggle="modal" data-target="#trailer">
+    <img src="http://www.gstatic.com/tv/thumb/movieposters/163411/p163411_p_v8_ad.jpg" width="220" height="342">
+    <h2>Hot Fuzz</h2>
+</div>
+
+<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="d96cjJhvlMA" data-toggle="modal" data-target="#trailer">
+    <img src="http://t2.gstatic.com/images?q=tbn:ANd9GcQW3LbpT94mtUG1PZIIzJNxmFX399wr_NcvoppJ82k7z99Hx6in" width="220" height="342">
+    <h2>Guardians of the Galaxy</h2>
+</div>
+
+<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="m4NCribDx4U" data-toggle="modal" data-target="#trailer">
+    <img src="http://t3.gstatic.com/images?q=tbn:ANd9GcTn2E6bqcLehK92h215qFnUpCYFqt02Iuwg-N4gVBmixzAXvGfZ" width="220" height="342">
+    <h2>Kingsmen: The Secret Service</h2>
+</div>
+
+<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="2ilzidi_J8Q" data-toggle="modal" data-target="#trailer">
+    <img src="https://ae01.alicdn.com/kf/HTB1rE0TSXXXXXbYXVXXq6xXFXXXZ/DIY-frame-font-b-GOODFELLAS-b-font-CLASSIC-font-b-MOVIE-b-font-font-b-POSTER.jpg" width="220" height="342">
+    <h2>Goodfellas</h2>
+</div>
+
+<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="ONHBaC-pfsk" data-toggle="modal" data-target="#trailer">
+    <img src="http://www.impawards.com/2016/posters/deadpool_ver4.jpg" width="220" height="342">
+    <h2>Deadpool</h2>
+</div>
+
     </div>
   </body>
 </html>
-'''
-
-
-# A single movie entry html template
-movie_tile_content = '''
-<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="{trailer_youtube_id}" data-toggle="modal" data-target="#trailer">
-    <img src="{poster_image_url}" width="220" height="342">
-    <h2>{movie_title}</h2>
-</div>
-'''
-
-
-def create_movie_tiles_content(movies):
-    # The HTML content for this section of the page
-    content = ''
-    for movie in movies:
-        # Extract the youtube ID from the url
-        youtube_id_match = re.search(
-            r'(?<=v=)[^&#]+', movie.movie_trailer)
-        youtube_id_match = youtube_id_match or re.search(
-            r'(?<=be/)[^&#]+', movie.trailer_youtube_url)
-        trailer_youtube_id = (youtube_id_match.group(0) if youtube_id_match
-                              else None)
-
-        # Append the tile for the movie with its content filled in
-        content += movie_tile_content.format(
-            movie_title=movie.movie_title,
-            poster_image_url=movie.movie_poster,
-            trailer_youtube_id=trailer_youtube_id
-        )
-
-    return content
-
-
-def open_movies_page(movies):
-    # Create or overwrite the output file
-    output_file = open('fresh_tomatoes.html', 'w')
-
-    # Replace the movie tiles placeholder generated content
-    rendered_content = main_page_content.format(
-        movie_tiles=create_movie_tiles_content(movies))
-
-    # Output the file
-    output_file.write(main_page_head + rendered_content)
-    output_file.close()
-
-    # open the output file in the browser (in a new tab, if possible)
-    url = os.path.abspath(output_file.name)
-    webbrowser.open('file://' + url, new=2)
